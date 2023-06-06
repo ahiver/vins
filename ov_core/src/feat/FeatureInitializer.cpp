@@ -94,14 +94,27 @@ bool FeatureInitializer::single_triangulation(std::shared_ptr<Feature> feat,
   singularValues = svd.singularValues();
   double condA = singularValues(0, 0) / singularValues(singularValues.rows() - 1, 0);
 
-  // std::stringstream ss;
-  // ss << feat->featid << " - cond " << std::abs(condA) << " - z " << p_f(2, 0) << std::endl;
-  // PRINT_DEBUG(ss.str().c_str());
+  std::stringstream ss;
+  ss << feat->featid << " - cond " << std::abs(condA) << " - z " << p_f(2, 0) << std::endl;
+  PRINT_DEBUG(ss.str().c_str());
 
   // If we have a bad condition number, or it is too close
   // Then set the flag for bad (i.e. set z-axis to nan)
   if (std::abs(condA) > _options.max_cond_number || p_f(2, 0) < _options.min_dist || p_f(2, 0) > _options.max_dist ||
       std::isnan(p_f.norm())) {
+
+    if (std::abs(condA) > _options.max_cond_number) {
+      std::cout << "std::abs(condA) > _options.max_cond_number" << std::abs(condA) << ">" << _options.max_cond_number << std::endl; 
+    }
+    if (p_f(2, 0) < _options.min_dist)  {
+      std::cout << "p_f(2, 0) < _options.min_dist" << p_f(2, 0) << "<" << _options.min_dist << std::endl; 
+    }
+    if (p_f(2, 0) > _options.max_dist) {
+      std::cout << "p_f(2, 0) > _options.max_dist" << p_f(2, 0) << ">" << _options.max_dist << std::endl; 
+    }
+    if (std::isnan(p_f.norm())) {
+      std::cout << "isnan(p_f.norm())" << std::endl;
+    }
     return false;
   }
 
@@ -219,6 +232,15 @@ bool FeatureInitializer::single_gaussnewton(std::shared_ptr<Feature> feat,
   const Eigen::Matrix<double, 3, 3> &R_GtoA = clonesCAM.at(feat->anchor_cam_id).at(feat->anchor_clone_timestamp).Rot();
   const Eigen::Matrix<double, 3, 1> &p_AinG = clonesCAM.at(feat->anchor_cam_id).at(feat->anchor_clone_timestamp).pos();
 
+  std::cout << "feat->p_FinA"<< static_cast<Eigen::Vector3d>(feat->p_FinA) << std::endl;
+  // std::cout << "rho: " << rho << " alpha: " << "beta: " << beta  << std::endl;
+
+  // std::cout << "Hess init: " << static_cast<Eigen::Matrix<double, 3, 3>>(Hess) << std::endl;
+  // std::cout << "grad init: " << static_cast<Eigen::Matrix<double, 3, 1>>(grad) << std::endl;
+
+  // std::cout << "R_GtoA init: " << static_cast<Eigen::Matrix<double, 3, 3>>(R_GtoA) << std::endl;
+  // std::cout << "p_AinG init: " << static_cast<Eigen::Matrix<double, 3, 1>>(p_AinG) << std::endl;
+
   // Loop till we have either
   // 1. Reached our max iteration count
   // 2. System is unstable
@@ -290,18 +312,24 @@ bool FeatureInitializer::single_gaussnewton(std::shared_ptr<Feature> feat,
     for (size_t r = 0; r < (size_t)Hess.rows(); r++) {
       Hess_l(r, r) *= (1.0 + lam);
     }
+    
+    // std::cout << "Hess: " << static_cast<Eigen::Matrix<double, 3, 3>>(Hess) << std::endl;
+    // std::cout << "grad: " << static_cast<Eigen::Matrix<double, 3, 1>>(grad) << std::endl;
+
 
     Eigen::Matrix<double, 3, 1> dx = Hess_l.colPivHouseholderQr().solve(grad);
-    // Eigen::Matrix<double,3,1> dx = (Hess+lam*Eigen::MatrixXd::Identity(Hess.rows(), Hess.rows())).colPivHouseholderQr().solve(grad);
+    // Eigen::Matrix<double,3,1> dx2 = (Hess+lam*Eigen::MatrixXd::Identity(Hess.rows(), Hess.rows())).colPivHouseholderQr().solve(grad);
 
     // Check if error has gone down
     double cost = compute_error(clonesCAM, feat, alpha + dx(0, 0), beta + dx(1, 0), rho + dx(2, 0));
 
     // Debug print
-    // std::stringstream ss;
-    // ss << "run = " << runs << " | cost = " << dx.norm() << " | lamda = " << lam << " | depth = " << 1/rho << endl;
-    // PRINT_DEBUG(ss.str().c_str());
+    std::stringstream ss;
+    // std::cout << static_cast<Eigen::Matrix<double, 3, 1>>(dx) << std::endl;
 
+    // ss << "run = " << runs << " | cost = " << dx.norm() << " | lamda = " << lam << " | depth = " << 1/rho << std::endl;
+    PRINT_DEBUG(ss.str().c_str());
+    
     // Check if converged
     if (cost <= cost_old && (cost_old - cost) / cost_old < _options.min_dcost) {
       alpha += dx(0, 0);
@@ -357,7 +385,7 @@ bool FeatureInitializer::single_gaussnewton(std::shared_ptr<Feature> feat,
     }
   }
   std::stringstream ss;
-  ss << feat->featid << " - max base " << (feat->p_FinA.norm() / base_line_max) << " - z " << feat->p_FinA(2) << std::endl;
+  // ss << feat->featid << " - max base " << (feat->p_FinA.norm() / base_line_max) << " - z " << feat->p_FinA(2) << std::endl;
   PRINT_DEBUG(ss.str().c_str());
 
   // Check if this feature is bad or not
@@ -367,12 +395,22 @@ bool FeatureInitializer::single_gaussnewton(std::shared_ptr<Feature> feat,
   if (feat->p_FinA(2) < _options.min_dist || feat->p_FinA(2) > _options.max_dist ||
       (feat->p_FinA.norm() / base_line_max) > _options.max_baseline || std::isnan(feat->p_FinA.norm())) {
         std::stringstream ss;
-        ss << " base line = " << base_line_max << " feat->p_FinA.norm() = " << feat->p_FinA.norm() << std::endl ;
-        ss << feat->featid << " - pFina(2) " << feat->p_FinA(2) << " <? " << _options.min_dist  << std::endl;
-        ss << feat->featid << " - pFina(2) " << feat->p_FinA(2) << " >? " << _options.max_dist  << std::endl;
-        ss << feat->featid << " - max base " << (feat->p_FinA.norm() / base_line_max) << " ?> " << _options.max_baseline << std::endl;
-        
-        
+        // ss << " base line = " << base_line_max << " feat->p_FinA.norm() = " << feat->p_FinA.norm() << std::endl ;
+        if (feat->p_FinA(2) < _options.min_dist) {
+          ss << "feat->p_FinA(2) < _options.min_dist" << feat->p_FinA(2) << "<" << _options.min_dist << std::endl;
+        }
+
+        if (feat->p_FinA(2) > _options.max_dist) {
+          ss << "feat->p_FinA(2) > _options.max_dist" << feat->p_FinA(2) << ">" << _options.max_dist << std::endl;
+        }
+
+        if ((feat->p_FinA.norm() / base_line_max) > _options.max_baseline) {
+          ss << "(feat->p_FinA.norm() / base_line_max) > _options.max_baseline" << feat->p_FinA.norm() / base_line_max << ">" << _options.max_baseline << std::endl;
+        }
+
+        if (std::isnan(feat->p_FinA.norm())) {
+          ss << "isnan(feat->p_FinA.norm())" << std::endl;
+        }       
         PRINT_DEBUG(ss.str().c_str());
     return false;
   }
