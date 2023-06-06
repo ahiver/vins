@@ -21,7 +21,15 @@
     <!-- <arg name="bag"         default="/home/astrib/workspace/bags/roll2/cam_imu.bag" /> -->
 
     <!-- <arg name="bag"         default="/home/astrib/bees/bags/bee1/flights/around_room/cam_imu.bag" /> -->
-    <arg name="bag"         default="/home/astrib/bees/bags/bee2/flights/cross/cam_imu.bag" />
+    <!-- <arg name="bag"         default="/home/astrib/bees/bags/bee2/flights/cross/cam_imu.bag" /> -->
+    <!-- <arg name="bag"         default="/home/astrib/bees/bags/bee2/flights/dark/cam_imu.bag" /> -->
+    <!-- <arg name="bag"         default="/home/astrib/bees/bags/bee2/flights/glasha3/cam_imu.bag" /> -->
+    <!-- <arg name="bag"         default="/home/astrib/bees/bags/bee2/flights/glasha6_day_exp500/cam_imu.bag" /> -->
+    <!-- <arg name="bag"         default="/home/astrib/bees/bags/bee2/flights/2023-06-03T224602/cam_imu_gps.bag" /> -->
+    <arg name="bag"         default="/home/astrib/bees/bags/bee2/flights/2023-06-04T112718_drift/cam_imu_gps.bag" />
+    
+    
+    <!-- <arg name="bag"         default="/home/astrib/bees/bags/bee2/flights/dark2/cam_imu.bag" /> -->
     <!-- <arg name="bag"         default="/datasets/$(arg config)/$(arg dataset).bag" /> -->
 
     <!-- saving trajectory path and timing information -->

@@ -72,7 +72,7 @@ public:
    */
   static void perform_griding(const cv::Mat &img, const cv::Mat &mask, std::vector<cv::KeyPoint> &pts, int num_features, int grid_x,
                               int grid_y, int threshold, bool nonmaxSuppression) {
-
+    PRINT_DEBUG("Grider_FAST.perform_griding");
     // We want to have equally distributed features
     // NOTE: If we have more grids than number of total points, we calc the biggest grid we can do
     // NOTE: Thus if we extract 1 point per grid we have
@@ -151,7 +151,10 @@ public:
 
     // Return if no points
     if (pts.empty())
+      PRINT_DEBUG("NO FAST Points");
       return;
+
+    PRINT_DEBUG("%d FAST Points", pts.size());
 
     // Sub-pixel refinement parameters
     cv::Size win_size = cv::Size(5, 5);

@@ -74,10 +74,11 @@ public:
   static void perform_griding(const cv::Mat &img, const cv::Mat &mask, const std::vector<std::pair<int, int>> &valid_locs,
                               std::vector<cv::KeyPoint> &pts, int num_features, int grid_x, int grid_y, int threshold,
                               bool nonmaxSuppression) {
-
     // Return if there is nothing to extract
-    if (valid_locs.empty())
+    if (valid_locs.empty()) {
+      PRINT_DEBUG("Grider_GRID.perform_griding NO valid locs");
       return;
+    }
 
     // We want to have equally distributed features
     // NOTE: If we have more grids than number of total points, we calc the biggest grid we can do
@@ -155,10 +156,13 @@ public:
       pts.insert(pts.end(), collection.at(r).begin(), collection.at(r).end());
     }
 
+
     // Return if no points
     if (pts.empty())
+      PRINT_DEBUG("NO GRID Points");
       return;
 
+    PRINT_DEBUG("%d GRID Points", pts.size());
     // Sub-pixel refinement parameters
     cv::Size win_size = cv::Size(5, 5);
     cv::Size zero_zone = cv::Size(-1, -1);

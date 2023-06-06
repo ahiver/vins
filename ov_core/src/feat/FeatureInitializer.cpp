@@ -356,9 +356,9 @@ bool FeatureInitializer::single_gaussnewton(std::shared_ptr<Feature> feat,
         base_line_max = base_line;
     }
   }
-  // std::stringstream ss;
-  // ss << feat->featid << " - max base " << (feat->p_FinA.norm() / base_line_max) << " - z " << feat->p_FinA(2) << std::endl;
-  // PRINT_DEBUG(ss.str().c_str());
+  std::stringstream ss;
+  ss << feat->featid << " - max base " << (feat->p_FinA.norm() / base_line_max) << " - z " << feat->p_FinA(2) << std::endl;
+  PRINT_DEBUG(ss.str().c_str());
 
   // Check if this feature is bad or not
   // 1. If the feature is too close
@@ -366,6 +366,14 @@ bool FeatureInitializer::single_gaussnewton(std::shared_ptr<Feature> feat,
   // 3. If the baseline ratio is large
   if (feat->p_FinA(2) < _options.min_dist || feat->p_FinA(2) > _options.max_dist ||
       (feat->p_FinA.norm() / base_line_max) > _options.max_baseline || std::isnan(feat->p_FinA.norm())) {
+        std::stringstream ss;
+        ss << " base line = " << base_line_max << " feat->p_FinA.norm() = " << feat->p_FinA.norm() << std::endl ;
+        ss << feat->featid << " - pFina(2) " << feat->p_FinA(2) << " <? " << _options.min_dist  << std::endl;
+        ss << feat->featid << " - pFina(2) " << feat->p_FinA(2) << " >? " << _options.max_dist  << std::endl;
+        ss << feat->featid << " - max base " << (feat->p_FinA.norm() / base_line_max) << " ?> " << _options.max_baseline << std::endl;
+        
+        
+        PRINT_DEBUG(ss.str().c_str());
     return false;
   }
 
