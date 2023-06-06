@@ -1,0 +1,16 @@
+%YAML:1.0
+
+imu0:
+  T_i_b:
+    - [1.0, 0.0, 0.0, 0.0]
+    - [0.0, 1.0, 0.0, 0.0]
+    - [0.0, 0.0, 1.0, 0.0]
+    - [0.0, 0.0, 0.0, 1.0]
+  accelerometer_noise_density: 0.002105983867447864
+  accelerometer_random_walk: 5.64103607543471e-05
+  gyroscope_noise_density: 0.0001607076606687684
+  gyroscope_random_walk: 8.76817007111442e-06
+  model: calibrated
+  rostopic: /mavros/imu/data_raw
+  time_offset: 0.0
+  update_rate: 315
