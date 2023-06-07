@@ -26,8 +26,11 @@
     <!-- <arg name="bag"         default="/home/astrib/bees/bags/bee2/flights/glasha3/cam_imu.bag" /> -->
     <!-- <arg name="bag"         default="/home/astrib/bees/bags/bee2/flights/glasha6_day_exp500/cam_imu.bag" /> -->
     <!-- <arg name="bag"         default="/home/astrib/bees/bags/bee2/flights/2023-06-03T224602/cam_imu_gps.bag" /> -->
-    <arg name="bag"         default="/home/astrib/bees/bags/bee2/flights/2023-06-04T112718_drift/cam_imu_gps.bag" />
-    
+    <!-- <arg name="bag"         default="/home/astrib/bees/bags/bee2/flights/2023-06-04T112718_drift/cam_imu_gps.bag" /> -->
+    <!-- <arg name="bag"         default="/home/astrib/bees/bags/bee5/flights/2023-06-07T001606/cam_imu_gps.bag" /> -->
+    <!-- <arg name="bag"         default="/home/astrib/bees/bags/bee5/flights/2023-06-07T001408/cam_imu_gps.bag" /> -->
+    <!-- <arg name="bag"         default="/home/astrib/bees/bags/bee5/flights/2023-06-07T001111/cam_imu_gps.bag" />  -->
+    <arg name="bag"         default="/home/astrib/bees/bags/bee5/flights/2023-06-07T000736_zupt_bad/cam_imu_gps.bag" />
     
     <!-- <arg name="bag"         default="/home/astrib/bees/bags/bee2/flights/dark2/cam_imu.bag" /> -->
     <!-- <arg name="bag"         default="/datasets/$(arg config)/$(arg dataset).bag" /> -->

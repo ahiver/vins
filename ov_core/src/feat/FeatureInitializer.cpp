@@ -94,9 +94,9 @@ bool FeatureInitializer::single_triangulation(std::shared_ptr<Feature> feat,
   singularValues = svd.singularValues();
   double condA = singularValues(0, 0) / singularValues(singularValues.rows() - 1, 0);
 
-  std::stringstream ss;
-  ss << feat->featid << " - cond " << std::abs(condA) << " - z " << p_f(2, 0) << std::endl;
-  PRINT_DEBUG(ss.str().c_str());
+  // std::stringstream ss;
+  // ss << feat->featid << " - cond " << std::abs(condA) << " - z " << p_f(2, 0) << std::endl;
+  // PRINT_DEBUG(ss.str().c_str());
 
   // If we have a bad condition number, or it is too close
   // Then set the flag for bad (i.e. set z-axis to nan)
@@ -232,7 +232,7 @@ bool FeatureInitializer::single_gaussnewton(std::shared_ptr<Feature> feat,
   const Eigen::Matrix<double, 3, 3> &R_GtoA = clonesCAM.at(feat->anchor_cam_id).at(feat->anchor_clone_timestamp).Rot();
   const Eigen::Matrix<double, 3, 1> &p_AinG = clonesCAM.at(feat->anchor_cam_id).at(feat->anchor_clone_timestamp).pos();
 
-  std::cout << "feat->p_FinA"<< static_cast<Eigen::Vector3d>(feat->p_FinA) << std::endl;
+  // std::cout << "feat->p_FinA"<< static_cast<Eigen::Vector3d>(feat->p_FinA) << std::endl;
   // std::cout << "rho: " << rho << " alpha: " << "beta: " << beta  << std::endl;
 
   // std::cout << "Hess init: " << static_cast<Eigen::Matrix<double, 3, 3>>(Hess) << std::endl;
@@ -324,11 +324,11 @@ bool FeatureInitializer::single_gaussnewton(std::shared_ptr<Feature> feat,
     double cost = compute_error(clonesCAM, feat, alpha + dx(0, 0), beta + dx(1, 0), rho + dx(2, 0));
 
     // Debug print
-    std::stringstream ss;
+    // std::stringstream ss;
     // std::cout << static_cast<Eigen::Matrix<double, 3, 1>>(dx) << std::endl;
 
     // ss << "run = " << runs << " | cost = " << dx.norm() << " | lamda = " << lam << " | depth = " << 1/rho << std::endl;
-    PRINT_DEBUG(ss.str().c_str());
+    // PRINT_DEBUG(ss.str().c_str());
     
     // Check if converged
     if (cost <= cost_old && (cost_old - cost) / cost_old < _options.min_dcost) {
@@ -384,9 +384,9 @@ bool FeatureInitializer::single_gaussnewton(std::shared_ptr<Feature> feat,
         base_line_max = base_line;
     }
   }
-  std::stringstream ss;
+  // std::stringstream ss;
   // ss << feat->featid << " - max base " << (feat->p_FinA.norm() / base_line_max) << " - z " << feat->p_FinA(2) << std::endl;
-  PRINT_DEBUG(ss.str().c_str());
+  // PRINT_DEBUG(ss.str().c_str());
 
   // Check if this feature is bad or not
   // 1. If the feature is too close

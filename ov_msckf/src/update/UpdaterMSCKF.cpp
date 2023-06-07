@@ -218,18 +218,19 @@ void UpdaterMSCKF::update(std::shared_ptr<State> state, std::vector<std::shared_
     } else {
       boost::math::chi_squared chi_squared_dist(res.rows());
       chi2_check = boost::math::quantile(chi_squared_dist, 0.95);
-      PRINT_WARNING(YELLOW "chi2_check over the residual limit - %d\n" RESET, (int)res.rows());
+      // PRINT_WARNING(YELLOW "chi2_check over the residual limit - %d\n" RESET, (int)res.rows());
+      PRINT_DEBUG(YELLOW "chi2_check over the residual limit - %d\n" RESET, (int)res.rows());
     }
 
     // Check if we should delete or not
     if (chi2 > _options.chi2_multipler * chi2_check) {
       (*it2)->to_delete = true;
       it2 = feature_vec.erase(it2);
-      // PRINT_DEBUG("featid = %d\n", feat.featid);
-      // PRINT_DEBUG("chi2 = %f > %f\n", chi2, _options.chi2_multipler*chi2_check);
-      // std::stringstream ss;
-      // ss << "res = " << std::endl << res.transpose() << std::endl;
-      // PRINT_DEBUG(ss.str().c_str());
+      PRINT_DEBUG("Deleting featid = %d\n", feat.featid);
+      PRINT_DEBUG("chi2 = %f > %f\n", chi2, _options.chi2_multipler*chi2_check);
+      std::stringstream ss;
+      ss << "res = " << std::endl << res.transpose() << std::endl;
+      PRINT_DEBUG(ss.str().c_str());
       continue;
     }
 
