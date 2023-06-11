@@ -412,6 +412,16 @@ bool FeatureInitializer::single_gaussnewton(std::shared_ptr<Feature> feat,
           ss << "isnan(feat->p_FinA.norm())" << std::endl;
         }       
         PRINT_DEBUG(ss.str().c_str());
+
+        if (runs >= _options.max_runs) {
+          std::cout << "Reached our max iteration count: runs < _options.max_runs. " << runs << " >= " << _options.max_runs << std::endl;
+        }
+        if (lam >= _options.max_lamda) {  
+          std::cout << "System is unstable: lam >= _options.max_lamda. " << lam << " >= " << _options.max_lamda << std::endl;
+        }
+        if (eps <= _options.min_dx) {
+          std::cout << "System has converged: eps <= _options.min_dx. " << eps << " <= " << _options.min_dx << std::endl;
+        }
     return false;
   }
 
