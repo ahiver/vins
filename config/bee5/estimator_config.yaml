@@ -133,7 +133,7 @@ histogram_method: "HISTOGRAM" # NONE, HISTOGRAM, CLAHE
 # If we should perform 1d triangulation instead of 3d
 fi_triangulate_1d: false
 # If we should perform Levenberg-Marquardt refinment
-fi_refine_features: true
+fi_refine_features: false #true
 # Max runs for Levenberg-Marquardt
 fi_max_runs: 5
 # Init lambda for Levenberg-Marquardt optimization
@@ -147,7 +147,7 @@ fi_min_dcost: 1e-6
 # Multiplier to increase/decrease lambda
 fi_lam_mult: 10
 # Minimum distance to accept triangulated features
-fi_min_dist: -10 #0.1
+fi_min_dist: 0.1 #-10
 # Maximum distance to accept triangulated features
 fi_max_dist: 60 #60
 # Max baseline ratio to accept triangulated features
