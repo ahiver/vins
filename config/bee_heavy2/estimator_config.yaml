@@ -7,7 +7,7 @@ use_imuavg: true # if using discrete integration, if we should average sequentia
 use_rk4int: true # if rk4 integration should be used (overrides imu averaging)
 # true
 # use_stereo: false # if we have more than 1 camera, if we should try to track stereo constraints between pairs
-use_stereo: false #true # if we have more than 1 camera, if we should try to track stereo constraints between pairs
+use_stereo: true # true # if we have more than 1 camera, if we should try to track stereo constraints between pairs
 max_cameras: 1 # how many cameras we have 1 = mono, 2 = stereo, >2 = binocular (all mono tracking)
 
 calib_cam_extrinsics: true # if the transform between camera and IMU should be optimized R_ItoC, p_CinI
@@ -49,8 +49,8 @@ feat_rep_aruco: "ANCHORED_MSCKF_INVERSE_DEPTH"
 try_zupt: true
 zupt_chi2_multipler: 0.5 # set to 0 for only disp-based
 zupt_max_velocity: 0.1
-zupt_noise_multiplier: 1
-zupt_max_disparity: 2.0 #0.4 # set to 0 for only imu-based
+zupt_noise_multiplier: 10
+zupt_max_disparity: 0.4 #2.0 #0.4 # set to 0 for only imu-based
 zupt_only_at_beginning: false
 
 
@@ -119,7 +119,8 @@ min_px_dist: 10 # distance between features (features near each other provide le
 knn_ratio: 0.70 # descriptor knn threshold for the top two descriptor matches
 # knn_ratio: 0.30 # descriptor knn threshold for the top two descriptor matches
 #k 31.0
-track_frequency: 21.0 # frequency we will perform feature tracking at (in frames per second / hertz)
+track_frequency: 30.0 # frequency we will perform feature tracking at (in frames per second / hertz)
+# downsample_cameras: false # will downsample image in half if true
 downsample_cameras: false # will downsample image in half if true
 num_opencv_threads: 4 # -1: auto, 0-1: serial, >1: number of threads
 histogram_method: "HISTOGRAM" # NONE, HISTOGRAM, CLAHE
@@ -131,29 +132,30 @@ histogram_method: "HISTOGRAM" # NONE, HISTOGRAM, CLAHE
 # fi_triangulate_1d: false
 
 # If we should perform 1d triangulation instead of 3d
-fi_triangulate_1d: false
-# If we should perform Levenberg-Marquardt refinment
-fi_refine_features: false #true
-# Max runs for Levenberg-Marquardt
-fi_max_runs: 5
-# Init lambda for Levenberg-Marquardt optimization
-fi_init_lamda: 1e-3
-# Max lambda for Levenberg-Marquardt optimization
-fi_max_lamda: 1e10
-# Cutoff for dx increment to consider as converged
-fi_min_dx: 1e-6
-# Cutoff for cost decrement to consider as converged
-fi_min_dcost: 1e-6
-# Multiplier to increase/decrease lambda
-fi_lam_mult: 10
-# Minimum distance to accept triangulated features
-fi_min_dist: 0.1 #-10
-# Maximum distance to accept triangulated features
-fi_max_dist: 60 #60
-# Max baseline ratio to accept triangulated features
-fi_max_baseline: 40 #40
-# Max condition number of linear triangulation matrix accept triangulated features
-fi_max_cond_number: 30000 #10000 #10000
+# fi_triangulate_1d: false
+# # If we should perform Levenberg-Marquardt refinment
+# fi_refine_features: true
+# # Max runs for Levenberg-Marquardt
+# fi_max_runs: 5
+# # Init lambda for Levenberg-Marquardt optimization
+# fi_init_lamda: 1e-3
+# # Max lambda for Levenberg-Marquardt optimization
+# fi_max_lamda: 1e10
+# # Cutoff for dx increment to consider as converged
+# fi_min_dx: 1e-6
+# # Cutoff for cost decrement to consider as converged
+# fi_min_dcost: 1e-6
+# # Multiplier to increase/decrease lambda
+# fi_lam_mult: 10
+# # Minimum distance to accept triangulated features
+# fi_min_dist: 0.1 #0.1
+# # Maximum distance to accept triangulated features
+# fi_max_dist: 60 #60
+# # Max baseline ratio to accept triangulated features
+# fi_max_baseline: 40 #40
+fi_max_baseline: 100 #40
+# # Max condition number of linear triangulation matrix accept triangulated features
+fi_max_cond_number: 40000 #10000
 
 # aruco tag tracker for the system
 # DICT_6X6_1000 from https://chev.me/arucogen/
@@ -167,13 +169,15 @@ downsize_aruco: true
 # camera noises and chi-squared threshold multipliers
 #k 1.5
 # up_msckf_sigma_px: 1
-up_msckf_sigma_px: 10
-# up_msckf_chi2_multipler: 1
+up_msckf_sigma_px: 1
+up_msckf_chi2_multipler: 10
 # Bee2 change
-up_msckf_chi2_multipler: 100
+# up_msckf_chi2_multipler: 10
+# up_msckf_chi2_multipler: 10
+
 #k 1.5
 up_slam_sigma_px: 1
-up_slam_chi2_multipler: 100
+up_slam_chi2_multipler: 10
 up_aruco_sigma_px: 1
 up_aruco_chi2_multipler: 1
 
