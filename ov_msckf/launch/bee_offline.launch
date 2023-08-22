@@ -71,13 +71,19 @@
     <!-- <arg name="bag"         default="/home/astrib/bees/bags/bee5/flights/2023-06-12T174347/cam_imu_gps.bag" /> -->
  
     <!-- <arg name="bag"         default="/home/astrib/bees/bags/bee5/flights/2023-06-14T094138/cam_imu_gps.bag" /> -->
-    <arg name="bag"         default="/home/astrib/bees/bags/bee5/flights/2023-06-14T094520/cam_imu_gps.bag" />
+    <!-- <arg name="bag"         default="/home/astrib/bees/bags/bee5/flights/2023-06-14T094520/cam_imu_gps.bag" /> -->
+    <!-- <arg name="bag"         default="/media/astrib/713B-10FD/bags/flights/2023-08-18T002949/cam_imu_vins.bag" /> -->
 
     <!-- <arg name="bag"         default="/home/astrib/bees/bags/bee5/flights/2023-06-14T095029/cam_imu_gps.bag-" /> -->
     <!-- <arg name="bag"         default="/home/astrib/bees/bags/bee5/flights/2023-06-14T095715/cam_imu_gps.bag+" /> -->
    <!-- <arg name="bag"         default="/home/astrib/bees/bags/bee5/flights/2023-06-14T095958/cam_imu_gps.bag-" /> -->
    <!-- <arg name="bag"         default="/home/astrib/bees/bags/bee5/flights/2023-06-14T100324/cam_imu_gps.bag" /> -->
     <!-- <arg name="bag"         default="/home/astrib/bees/bags/bee5/flights/2023-06-14T100542/cam_imu_gps.bag-" /> -->
+
+
+    <!-- <arg name="bag"         default="/media/astrib/APACER1T/bags/flights/2023-08-18/2023-08-18T002949/cam_imu_vins.bag" /> -->
+    <arg name="bag"         default="/media/astrib/APACER1T/bags/flights/2023-08-16/bad/2023-08-16T094747/cam_imu_vins.bag" />
+
 
     <!-- <arg name="bag"         default="/datasets/$(arg config)/$(arg dataset).bag" /> -->
 

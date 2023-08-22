@@ -57,7 +57,8 @@
         <!-- timing statistics recording -->
         <param name="record_timing_information" type="bool"   value="$(arg dotime)" />
         <param name="record_timing_filepath"    type="str"    value="$(arg path_time)" />
-
+        
+        <param name="/use_sim_time" value="true" />
     </node>
 
     <!-- record the trajectory if enabled -->
