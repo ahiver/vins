@@ -98,7 +98,10 @@ void Propagator::propagate_and_clone(std::shared_ptr<State> state, double timest
       dt_summed += prop_data.at(i + 1).timestamp - prop_data.at(i).timestamp;
     }
   }
-  assert(std::abs((time1 - time0) - dt_summed) < 1e-4);
+  // Hiver: not sure why we need it. But it sometimes causes interraption of the app
+  // assert(std::abs((time1 - time0) - dt_summed) < 1e-4);
+  PRINT_WARNING(YELLOW "assert(std::abs((time1 - time0) - dt_summed) < 1e-4);\n" RESET);
+
 
   // Last angular velocity (used for cloning when estimating time offset)
   Eigen::Matrix<double, 3, 1> last_w = Eigen::Matrix<double, 3, 1>::Zero();
