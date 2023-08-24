@@ -169,15 +169,15 @@ downsize_aruco: true
 # camera noises and chi-squared threshold multipliers
 #k 1.5
 # up_msckf_sigma_px: 1
-up_msckf_sigma_px: 1
-up_msckf_chi2_multipler: 1.8 #1.85 #1.75 #1.9 #1.8 #2 #1 #2.05 # 2 #10
+up_msckf_sigma_px: 2 #1
+up_msckf_chi2_multipler: 2.5 #1.8 #10 #2 #1.8 #1.85 #1.75 #1.9 #1.8 #2 #1 #2.05 # 2 #10
 # Bee2 change
 # up_msckf_chi2_multipler: 10
 # up_msckf_chi2_multipler: 10
-
+# sigma = 2, chi2 = 2.5
 #k 1.5
-up_slam_sigma_px: 1
-up_slam_chi2_multipler: 1.8 #1.85 #1.75 #1.9 #1.8 #2 #1 #2.05 #2 #10
+up_slam_sigma_px: 2 #1
+up_slam_chi2_multipler: 2.5 #1.8 #10 #2 #1.8 #1.85 #1.75 #1.9 #1.8 #2 #1 #2.05 #2 #10
 up_aruco_sigma_px: 1
 up_aruco_chi2_multipler: 1
 
