@@ -85,9 +85,9 @@
     <!-- <arg name="bag"         default="/media/astrib/APACER1T/bags/flights/2023-08-16/bad/2023-08-16T094747/cam_imu_vins.bag" /> -->
 
     <!-- <arg name="bag"         default="/media/astrib/APACER1T/bags/flights/2023-08-23/2023-08-22T225534/cam_imu_vins.bag" /> -->
-    <arg name="bag"         default="/media/astrib/APACER1T/bags/flights/2023-08-23/2023-08-22T230249/cam_imu_vins.bag" />
-
-
+    <!-- <arg name="bag"         default="/media/astrib/APACER1T/bags/flights/2023-08-23/2023-08-22T230249/cam_imu_vins.bag" /> -->
+    <!-- <arg name="bag"         default="/media/astrib/APACER1T/bags/flights/2023-08-23/2023-08-22T230249/cam_imu_vins.bag" /> -->
+    <arg name="bag"         default="/media/astrib/APACER1T/bags/flights/2023-08-23/2023-08-22T224958/cam_imu_vins.bag" />
 
     <!-- <arg name="bag"         default="/datasets/$(arg config)/$(arg dataset).bag" /> -->
 
