@@ -583,6 +583,31 @@ void VioManager::do_feature_propagate_update(const ov_core::CameraData &message)
   rT7 = boost::posix_time::microsec_clock::local_time();
 
   //===================================================================================
+  // Send visual odometry information to MavRos
+  //===================================================================================
+
+  ros::Publisher camera_pose_publisher = node.advertise<geometry_msgs::PoseStamped>("vision_pose", 0 /*10*/);
+
+  PRINT_INFO("q_GtoI = %.3f,%.3f,%.3f,%.3f | p_IinG = %.3f,%.3f,%.3f | dist = %.2f (meters)\n", state->_imu->quat()(0),
+             state->_imu->quat()(1), state->_imu->quat()(2), state->_imu->quat()(3), state->_imu->pos()(0), state->_imu->pos()(1),
+             state->_imu->pos()(2), distance);
+
+  // Create PoseStamped message to be sent
+  msg_body_pose.header.stamp = message.timestamp;//transform.stamp_;
+  msg_body_pose.header.frame_id = "global"; //transform.frame_id_;
+  msg_body_pose.pose.position.x = state->_imu->pos()(0); //position_body.getX();
+  msg_body_pose.pose.position.y = state->_imu->pos()(1); //position_body.getY();
+  msg_body_pose.pose.position.z = state->_imu->pos()(2); //position_body.getZ();
+  msg_body_pose.pose.orientation.x = state->_imu->quat()(0); //quat_body.getX();
+  msg_body_pose.pose.orientation.y = state->_imu->quat()(1); //quat_body.getY();
+  msg_body_pose.pose.orientation.z = state->_imu->quat()(2); //quat_body.getZ();
+  msg_body_pose.pose.orientation.w = state->_imu->quat()(3); //quat_body.getW();
+
+  // Publish pose of body frame in world frame
+  camera_pose_publisher.publish(msg_body_pose);
+
+
+  //===================================================================================
   // Debug info, and stats tracking
   //===================================================================================
 
