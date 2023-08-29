@@ -43,6 +43,9 @@
 #include "update/UpdaterSLAM.h"
 #include "update/UpdaterZeroVelocity.h"
 
+#include <geometry_msgs/Pose.h>
+#include <geometry_msgs/PoseStamped.h>
+
 using namespace ov_core;
 using namespace ov_type;
 using namespace ov_msckf;
@@ -586,6 +589,8 @@ void VioManager::do_feature_propagate_update(const ov_core::CameraData &message)
   // Send visual odometry information to MavRos
   //===================================================================================
 
+  ros::NodeHandle node("~");
+
   ros::Publisher camera_pose_publisher = node.advertise<geometry_msgs::PoseStamped>("vision_pose", 0 /*10*/);
 
   PRINT_INFO("q_GtoI = %.3f,%.3f,%.3f,%.3f | p_IinG = %.3f,%.3f,%.3f | dist = %.2f (meters)\n", state->_imu->quat()(0),
@@ -593,7 +598,9 @@ void VioManager::do_feature_propagate_update(const ov_core::CameraData &message)
              state->_imu->pos()(2), distance);
 
   // Create PoseStamped message to be sent
-  msg_body_pose.header.stamp = message.timestamp;//transform.stamp_;
+  geometry_msgs::PoseStamped msg_body_pose;
+  msg_body_pose.header.stamp.sec = (std::uint32_t)message.timestamp;//transform.stamp_;
+  msg_body_pose.header.stamp.nsec = (message.timestamp - (std::uint32_t)message.timestamp)*1e9;
   msg_body_pose.header.frame_id = "global"; //transform.frame_id_;
   msg_body_pose.pose.position.x = state->_imu->pos()(0); //position_body.getX();
   msg_body_pose.pose.position.y = state->_imu->pos()(1); //position_body.getY();
