@@ -591,7 +591,7 @@ void VioManager::do_feature_propagate_update(const ov_core::CameraData &message)
 
   ros::NodeHandle node("~");
 
-  ros::Publisher camera_pose_publisher = node.advertise<geometry_msgs::PoseStamped>("vision_pose", 0 /*10*/);
+  ros::Publisher camera_pose_publisher = node.advertise<geometry_msgs::PoseStamped>("/mavros/vision_pose/pose", 0 /*10*/);
 
   PRINT_INFO("q_GtoI = %.3f,%.3f,%.3f,%.3f | p_IinG = %.3f,%.3f,%.3f | dist = %.2f (meters)\n", state->_imu->quat()(0),
              state->_imu->quat()(1), state->_imu->quat()(2), state->_imu->quat()(3), state->_imu->pos()(0), state->_imu->pos()(1),
