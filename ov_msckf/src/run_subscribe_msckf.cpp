@@ -83,7 +83,7 @@ int main(int argc, char **argv) {
   VioManagerOptions params;
   params.print_and_load(parser);
   params.use_multi_threading_subs = true;
-  sys = std::make_shared<VioManager>(params);
+  sys = std::make_shared<VioManager>(nh, params);
 #if ROS_AVAILABLE == 1
   viz = std::make_shared<ROS1Visualizer>(nh, sys);
   viz->setup_subscribers(parser);

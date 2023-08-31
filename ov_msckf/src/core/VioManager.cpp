@@ -50,7 +50,7 @@ using namespace ov_core;
 using namespace ov_type;
 using namespace ov_msckf;
 
-VioManager::VioManager(VioManagerOptions &params_) : thread_init_running(false), thread_init_success(false) {
+VioManager::VioManager(std::shared_ptr<ros::NodeHandle> nh, VioManagerOptions &params_) : _nh(nh), thread_init_running(false), thread_init_success(false) {
 
   // Nice startup message
   PRINT_DEBUG("=======================================\n");
@@ -63,6 +63,8 @@ VioManager::VioManager(VioManagerOptions &params_) : thread_init_running(false),
   params.print_and_load_noise();
   params.print_and_load_state();
   params.print_and_load_trackers();
+
+  camera_pose_publisher = nh->advertise<geometry_msgs::PoseStamped>("/mavros/vision_pose/pose", 0 /*10*/);
 
   // This will globally set the thread count we will use
   // -1 will reset to the system default threading (usually the num of cores)
@@ -588,10 +590,6 @@ void VioManager::do_feature_propagate_update(const ov_core::CameraData &message)
   //===================================================================================
   // Send visual odometry information to MavRos
   //===================================================================================
-
-  ros::NodeHandle node("~");
-
-  ros::Publisher camera_pose_publisher = node.advertise<geometry_msgs::PoseStamped>("/mavros/vision_pose/pose", 0 /*10*/);
 
   PRINT_INFO("q_GtoI = %.3f,%.3f,%.3f,%.3f | p_IinG = %.3f,%.3f,%.3f | dist = %.2f (meters)\n", state->_imu->quat()(0),
              state->_imu->quat()(1), state->_imu->quat()(2), state->_imu->quat()(3), state->_imu->pos()(0), state->_imu->pos()(1),
