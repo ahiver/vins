@@ -50,7 +50,7 @@ using namespace ov_core;
 using namespace ov_type;
 using namespace ov_msckf;
 
-VioManager::VioManager(std::shared_ptr<ros::NodeHandle> nh, VioManagerOptions &params_) : _nh(nh), thread_init_running(false), thread_init_success(false) {
+VioManager::VioManager(std::shared_ptr<ros::NodeHandle> nh, VioManagerOptions &params_) : thread_init_running(false), thread_init_success(false), _nh(nh) {
 
   // Nice startup message
   PRINT_DEBUG("=======================================\n");
@@ -64,7 +64,7 @@ VioManager::VioManager(std::shared_ptr<ros::NodeHandle> nh, VioManagerOptions &p
   params.print_and_load_state();
   params.print_and_load_trackers();
 
-  camera_pose_publisher = nh->advertise<geometry_msgs::PoseStamped>("/mavros/vision_pose/pose", 0 /*10*/);
+  camera_pose_publisher = nh->advertise<geometry_msgs::PoseStamped>("/mavros/vision_pose/pose", 10);
 
   // This will globally set the thread count we will use
   // -1 will reset to the system default threading (usually the num of cores)
