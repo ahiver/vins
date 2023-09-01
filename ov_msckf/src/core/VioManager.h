@@ -248,6 +248,8 @@ protected:
   // Publishers
   ros::Publisher camera_pose_publisher;
 
+  void publish_position(const ov_core::CameraData &message);
+
 };
 
 } // namespace ov_msckf

@@ -289,8 +289,9 @@ void VioManager::track_image_and_update(const ov_core::CameraData &message_const
     if (state->_timestamp != message.timestamp) {
       did_zupt_update = updaterZUPT->try_update(state, message.timestamp);
     }
-    if (did_zupt_update) {
+    if (did_zupt_update) {      
       assert(state->_timestamp == message.timestamp);
+      publish_position(message);
       propagator->clean_old_imu_measurements(message.timestamp + state->_calib_dt_CAMtoIMU->value()(0) - 0.10);
       updaterZUPT->clean_old_imu_measurements(message.timestamp + state->_calib_dt_CAMtoIMU->value()(0) - 0.10);
       propagator->invalidate_cache();
@@ -303,6 +304,7 @@ void VioManager::track_image_and_update(const ov_core::CameraData &message_const
   if (!is_initialized_vio) {
     is_initialized_vio = try_to_initialize(message);
     if (!is_initialized_vio) {
+      publish_position(message);
       double time_track = (rT2 - rT1).total_microseconds() * 1e-6;
       PRINT_DEBUG(BLUE "[TIME]: %.4f seconds for tracking\n" RESET, time_track);
       return;
@@ -322,7 +324,7 @@ void VioManager::do_feature_propagate_update(const ov_core::CameraData &message)
   // Return if the camera measurement is out of order
   if (state->_timestamp > message.timestamp) {
     PRINT_WARNING(YELLOW "image received out of order, unable to do anything (prop dt = %3f)\n" RESET,
-                  (message.timestamp - state->_timestamp));
+                  (message.timestamp - state->_timestamp));    
     return;
   }
 
@@ -341,6 +343,7 @@ void VioManager::do_feature_propagate_update(const ov_core::CameraData &message)
   if ((int)state->_clones_IMU.size() < std::min(state->_options.max_clone_size, 5)) {
     PRINT_DEBUG("waiting for enough clone states (%d of %d)....\n", (int)state->_clones_IMU.size(),
                 std::min(state->_options.max_clone_size, 5));
+    publish_position(message);
     return;
   }
 
@@ -348,6 +351,7 @@ void VioManager::do_feature_propagate_update(const ov_core::CameraData &message)
   if (state->_timestamp != message.timestamp) {
     PRINT_WARNING(RED "[PROP]: Propagator unable to propagate the state forward in time!\n" RESET);
     PRINT_WARNING(RED "[PROP]: It has been %.3f since last time we propagated\n" RESET, message.timestamp - state->_timestamp);
+    publish_position(message);
     return;
   }
   has_moved_since_zupt = true;
@@ -595,22 +599,7 @@ void VioManager::do_feature_propagate_update(const ov_core::CameraData &message)
              state->_imu->quat()(1), state->_imu->quat()(2), state->_imu->quat()(3), state->_imu->pos()(0), state->_imu->pos()(1),
              state->_imu->pos()(2), distance);
 
-  // Create PoseStamped message to be sent
-  geometry_msgs::PoseStamped msg_body_pose;
-  msg_body_pose.header.stamp.sec = (std::uint32_t)message.timestamp;//transform.stamp_;
-  msg_body_pose.header.stamp.nsec = (message.timestamp - (std::uint32_t)message.timestamp)*1e9;
-  msg_body_pose.header.frame_id = "global"; //transform.frame_id_;
-  msg_body_pose.pose.position.x = state->_imu->pos()(0); //position_body.getX();
-  msg_body_pose.pose.position.y = state->_imu->pos()(1); //position_body.getY();
-  msg_body_pose.pose.position.z = state->_imu->pos()(2); //position_body.getZ();
-  msg_body_pose.pose.orientation.x = state->_imu->quat()(0); //quat_body.getX();
-  msg_body_pose.pose.orientation.y = state->_imu->quat()(1); //quat_body.getY();
-  msg_body_pose.pose.orientation.z = state->_imu->quat()(2); //quat_body.getZ();
-  msg_body_pose.pose.orientation.w = state->_imu->quat()(3); //quat_body.getW();
-
-  // Publish pose of body frame in world frame
-  camera_pose_publisher.publish(msg_body_pose);
-
+  publish_position(message);
 
   //===================================================================================
   // Debug info, and stats tracking
@@ -695,4 +684,33 @@ void VioManager::do_feature_propagate_update(const ov_core::CameraData &message)
                  calib->quat()(3), calib->pos()(0), calib->pos()(1), calib->pos()(2));
     }
   }
+}
+
+void VioManager::publish_position(const ov_core::CameraData &message) {
+    // Create PoseStamped message to be sent
+  geometry_msgs::PoseStamped msg_body_pose;
+  msg_body_pose.header.stamp.sec = (std::uint32_t)message.timestamp;//transform.stamp_;
+  msg_body_pose.header.stamp.nsec = (message.timestamp - (std::uint32_t)message.timestamp)*1e9;
+  msg_body_pose.header.frame_id = "global"; //transform.frame_id_;
+  if (is_initialized_vio) {
+    msg_body_pose.pose.position.x = state->_imu->pos()(0); //position_body.getX();
+    msg_body_pose.pose.position.y = state->_imu->pos()(1); //position_body.getY();
+    msg_body_pose.pose.position.z = state->_imu->pos()(2); //position_body.getZ();
+    msg_body_pose.pose.orientation.x = state->_imu->quat()(0); //quat_body.getX();
+    msg_body_pose.pose.orientation.y = state->_imu->quat()(1); //quat_body.getY();
+    msg_body_pose.pose.orientation.z = state->_imu->quat()(2); //quat_body.getZ();
+    msg_body_pose.pose.orientation.w = state->_imu->quat()(3); //quat_body.getW();
+  } else {
+      msg_body_pose.pose.position.x = 0; //position_body.getX();
+      msg_body_pose.pose.position.y = 0; //position_body.getY();
+      msg_body_pose.pose.position.z = 0; //position_body.getZ();
+      msg_body_pose.pose.orientation.x = 0; //quat_body.getX();
+      msg_body_pose.pose.orientation.y = 0; //quat_body.getY();
+      msg_body_pose.pose.orientation.z = 1; //quat_body.getZ();
+      msg_body_pose.pose.orientation.w = 0; //quat_body.getW();
+  }
+
+  // Publish pose of body frame in world frame
+  camera_pose_publisher.publish(msg_body_pose);
+
 }
