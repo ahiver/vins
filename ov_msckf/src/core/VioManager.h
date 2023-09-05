@@ -66,7 +66,7 @@ public:
    * @brief Default constructor, will load all configuration variables
    * @param params_ Parameters loaded from either ROS or CMDLINE
    */
-  VioManager(VioManagerOptions &params_);
+  VioManager(std::shared_ptr<ros::NodeHandle> nh, VioManagerOptions &params_);
 
   /**
    * @brief Feed function for inertial data
@@ -241,6 +241,15 @@ protected:
   std::map<size_t, Eigen::Matrix3d> active_feat_linsys_A;
   std::map<size_t, Eigen::Vector3d> active_feat_linsys_b;
   std::map<size_t, int> active_feat_linsys_count;
+
+  /// Global node handler
+  std::shared_ptr<ros::NodeHandle> _nh;
+
+  // Publishers
+  ros::Publisher camera_pose_publisher;
+
+  void publish_position(const ov_core::CameraData &message);
+
 };
 
 } // namespace ov_msckf

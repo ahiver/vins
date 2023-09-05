@@ -95,7 +95,7 @@ int main(int argc, char **argv) {
   params.use_multi_threading_pubs = false;
   params.use_multi_threading_subs = false;
   sim = std::make_shared<Simulator>(params);
-  sys = std::make_shared<VioManager>(params);
+  sys = std::make_shared<VioManager>(nh, params);
 #if ROS_AVAILABLE == 1
   viz = std::make_shared<ROS1Visualizer>(nh, sys, sim);
 #elif ROS_AVAILABLE == 2
