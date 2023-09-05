@@ -706,8 +706,8 @@ void VioManager::publish_position(const ov_core::CameraData &message) {
       msg_body_pose.pose.position.z = 0; //position_body.getZ();
       msg_body_pose.pose.orientation.x = 0; //quat_body.getX();
       msg_body_pose.pose.orientation.y = 0; //quat_body.getY();
-      msg_body_pose.pose.orientation.z = 1; //quat_body.getZ();
-      msg_body_pose.pose.orientation.w = 0; //quat_body.getW();
+      msg_body_pose.pose.orientation.z = 0; //quat_body.getZ();
+      msg_body_pose.pose.orientation.w = 1; //quat_body.getW();
   }
 
   // Publish pose of body frame in world frame
