@@ -89,14 +89,14 @@ int main(int argc, char **argv) {
   // parser->parse_external("relative_config_imu", "imu0", "rostopic", topic_imu);
   PRINT_DEBUG("[BEE]: imu: %s\n", topic_imu.c_str());
   // ros::Subscriber sub_imu = nh->subscribe(topic_imu, 1, callback_imu);
-  ros::Subscriber sub_imu = nh->subscribe(topic_imu, 0, callback_imu, VoidConstPtr(), ros::TransportHints()
+  ros::Subscriber sub_imu = nh->subscribe(topic_imu, 0, callback_imu, ros::TransportHints()
         .reliable()
         .tcpNoDelay());
   // ros::Subscriber sub_imu = nh->subscribe(topic_imu, 1, viz->callback_inertial);
 
   std::string cam_topic = "/usb_cam/image_raw";
   // ros::Subscriber sub_camera = nh->subscribe(cam_topic, 1, callback_camera);
-  ros::Subscriber sub_camera = nh->subscribe(cam_topic, 0, callback_camera, VoidConstPtr(), ros::TransportHints()
+  ros::Subscriber sub_camera = nh->subscribe(cam_topic, 0, callback_camera, ros::TransportHints()
         .reliable()
         .tcpNoDelay());
   // ros::Subscriber sub_camera = nh->subscribe(cam_topic, 1, callback_camera);
